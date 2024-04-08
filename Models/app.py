@@ -28,8 +28,7 @@ def restaurants():
 
 @app.route("/restaurants/<int:id>",methods=["GET","DELETE"])
 def restaurants_by_id(id):
-    if request.method=="GET": 
-          
+    if request.method=="GET":           
        restaurant=Restaurant.query.filter(Restaurant.id==id).first()
        if restaurant:
         restaurant_dict={
@@ -46,7 +45,7 @@ def restaurants_by_id(id):
     }
         response=make_response(myres,200)    
     elif request.method=="DELETE":
-        restaurant=Restaurant.query.filter(Restaurant.id==id)
+        restaurant=Restaurant.query.filter(Restaurant.id==id).first()
         if restaurant:
             db.session.delete(restaurant)
         db.session.commit()
@@ -54,7 +53,7 @@ def restaurants_by_id(id):
         return response
     else:
         response={
-            "error":"Resaturant not found"
+            "error":"Restaurant not found"
         }
 
     return response
@@ -73,7 +72,8 @@ def restaurants_by_id(id):
 #         }
 #     return response,response.status_code
 @app.route("/pizzas")
-def get_all_pizzas():    
+def get_all_pizzas():
+       
        all_pizzas=[]       
        for pizza in Pizza.query.all():
         pizza_dict={
@@ -105,31 +105,31 @@ def get_all_pizzas():
     #     response=my_res        
     #    return response,response.status_code       
     # return response
-@app.route("/restaurant_pizza")
+@app.route("/restaurant_pizza",methods=["POST"])
 def post_restaurant_pizzas():
-    new_restaurant_pizza=RestaurantPizza(
+      if request.method=="POST":
+        new_restaurant_pizza=RestaurantPizza(
         price=request.form.get("price"),
         pizza_id=request.form.get("pizza_id"),
         restaurant_id=request.form.get("restaurant_id")
     )
-    db.session.add(new_restaurant_pizza)
-    db.session.commit()
-    restaurant_pizza_dict=new_restaurant_pizza.to_dict()
+        db.session.add(new_restaurant_pizza)
+        db.session.commit()
+        restaurant_pizza_dict=new_restaurant_pizza.to_dict()
     
-    if restaurant_pizza_dict:
-        response=make_response(restaurant_pizza_dict,201)
-        return response
-    else:
-        my_res={
+        if restaurant_pizza_dict:
+         response=make_response(restaurant_pizza_dict,201)
+         return response
+        else:
+         my_res={
             "errors": ["validation errors"]
         }
         response=my_res
     
-    return response,response.status_code
+        return response
 
 if __name__=="__main__":
-    app.run(
-        host="localhost",
+    app.run(        
         port=5555,
         debug=True
     )
