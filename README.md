@@ -1,0 +1,3 @@
+### APP
+
+This App is run through postman and is run using a local host.In this project,there are three models:Restaurant,Pizza and RestaurantPizza.A Pizza has many restaurants and a Restaurant has many Pizzas.RestaurantPizza is responsible for holding the relationship of the two tables.There are table each having a pluralized name of the associated model and also lowercased.There are also three files for holding the models and an app.py file for running the app.When you want to retrieve all restaurants,use localhost:5555/restaurants.When you want a specific user use localhost:5555/restaurant/<theidoftherestaurant>
