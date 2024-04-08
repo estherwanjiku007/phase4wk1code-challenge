@@ -29,8 +29,8 @@ def restaurants():
 @app.route("/restaurants/<int:id>",methods=["GET","DELETE"])
 def restaurants_by_id(id):
     if request.method=="GET":           
-       restaurant=Restaurant.query.filter(Restaurant.id==id).first()
-       if restaurant:
+        restaurant=Restaurant.query.filter(Restaurant.id==id).first()
+       
         restaurant_dict={
             "id":restaurant.id,
             "name": restaurant.name,
@@ -38,9 +38,11 @@ def restaurants_by_id(id):
             "pizzas":restaurant.pizzas
         }
         response=make_response(restaurant_dict,200)
-       else:
+        if response.ok:
+            return response             
+        else:
 
-        myres={
+         myres={
         "error":"restaurant not found"
     }
         response=make_response(myres,200)    
