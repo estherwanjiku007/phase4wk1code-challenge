@@ -28,35 +28,34 @@ def restaurants():
 
 @app.route("/restaurants/<int:id>",methods=["GET","DELETE"])
 def restaurants_by_id(id):
-    if request.method=="GET":           
-        restaurant=Restaurant.query.filter(Restaurant.id==id).first()
-       
-        restaurant_dict={
-            "id":restaurant.id,
-            "name": restaurant.name,
-            "address":restaurant.address,
-            "pizzas":restaurant.pizzas
-        }
-        response=make_response(restaurant_dict,200)
-        if response.ok:
-            return response             
-        else:
-
-         myres={
-        "error":"restaurant not found"
-    }
-        response=make_response(myres,200)    
+    if request.method=="GET":   
+        all_restaurants=[]        
+        restaurant = Restaurant.query.filter(Restaurant.id==id).first()       
+        response=make_response(restaurant,200)
+        if response.status_code==200:
+            response=make_response(restaurant.to_dict(),200)
+            return response
+        elif response.status_code==404:
+           myres={
+            "error":"restaurant not found"
+           }   
+           response=make_response(myres,404) 
+      
     elif request.method=="DELETE":
         restaurant=Restaurant.query.filter(Restaurant.id==id).first()
-        if restaurant:
+        if restaurant !=None:
             db.session.delete(restaurant)
-        db.session.commit()
-        response=make_response(restaurant,200)
-        return response
-    else:
-        response={
+            db.session.commit()
+            response_message={
+               "message":"Restaurant deleted successfully"
+            }
+            response=make_response(response_message,200)
+        #return response,response_message
+        elif restaurant==None:
+         response_message={
             "error":"Restaurant not found"
         }
+         response=make_response(response_message,404)
 
     return response
 
@@ -119,10 +118,10 @@ def post_restaurant_pizzas():
         db.session.commit()
         restaurant_pizza_dict=new_restaurant_pizza.to_dict()
     
-        if restaurant_pizza_dict:
+        if restaurant_pizza_dict !=None:
          response=make_response(restaurant_pizza_dict,201)
          return response
-        else:
+        elif restaurant_pizza_dict==None:
          my_res={
             "errors": ["validation errors"]
         }
