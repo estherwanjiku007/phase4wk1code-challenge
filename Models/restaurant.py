@@ -3,9 +3,8 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy_serializer import SerializerMixin
 from restaurantpizza import RestaurantPizza
 class Restaurant(db.Model,SerializerMixin):
-    __tablename__="restaurants"
-    serialize_only = ('id', 'name', 'address', )
-    serialize_rules=("-restaurantpizzas.restaurant","-pizzas.restaurant_pizzas")
+    __tablename__="restaurants"    
+    serialize_rules=("-restaurantpizzas.restaurant",)
     id=db.Column(db.Integer,primary_key=True)
     name=db.Column(db.String(49),unique=True)
     address=db.Column(db.String)

@@ -14,8 +14,9 @@ with app.app_context():
     db.session.commit()
 
     Dominion_Pizza=Restaurant(name="Dominion_pizza",address="Good Italian, Ngong Road, 5th Avenue",pizzas=[cheese,Pepperonni])
-    Pizza_Hut=Restaurant(name="Pizza_Hut",address="Westgate Mall, Mwanzi Road, Nrb 100")
-    db.session.add_all([Dominion_Pizza,Pizza_Hut])
+    Pizza_Hut=Restaurant(name="Pizza_Hut",address="Westgate Mall, Mwanzi Road, Nrb 100",pizzas=[cheese,Pepperonni])
+    r1=Restaurant(name="Cerena",address="Moi Avenue")
+    db.session.add_all([Dominion_Pizza,Pizza_Hut,r1])
     db.session.commit()
    
     

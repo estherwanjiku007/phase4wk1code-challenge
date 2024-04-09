@@ -4,7 +4,7 @@ from sqlalchemy_serializer import SerializerMixin
 from restaurantpizza import RestaurantPizza
 class Pizza(db.Model,SerializerMixin):
     __tablename__="pizzas"
-    serialize_rules=("-restaurantpizzas.pizza")
+    serialize_rules=("-restaurantpizzas.pizza",)
     id=db.Column(db.Integer,primary_key=True)    
     name=db.Column(db.String)
     ingredients=db.Column(db.String)

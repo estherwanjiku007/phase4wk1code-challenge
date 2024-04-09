@@ -28,35 +28,29 @@ def restaurants():
 
 @app.route("/restaurants/<int:id>",methods=["GET","DELETE"])
 def restaurants_by_id(id):
+    restaurant = Restaurant.query.filter(Restaurant.id==id).first()
     if request.method=="GET":   
-        all_restaurants=[]        
-        restaurant = Restaurant.query.filter(Restaurant.id==id).first()       
-        response=make_response(restaurant,200)
-        if response.status_code==200:
-            response=make_response(restaurant.to_dict(),200)
+       
+        if restaurant:             
+            restaurant_dict=restaurant.to_dict() 
+            print(restaurant_dict)           
+            response=make_response(restaurant_dict,200)
             return response
-        elif response.status_code==404:
-           myres={
-            "error":"restaurant not found"
-           }   
-           response=make_response(myres,404) 
-      
-    elif request.method=="DELETE":
-        restaurant=Restaurant.query.filter(Restaurant.id==id).first()
-        if restaurant !=None:
+    elif request.method=="DELETE":        
+        if restaurant :
             db.session.delete(restaurant)
             db.session.commit()
             response_message={
                "message":"Restaurant deleted successfully"
             }
-            response=make_response(response_message,200)
-        #return response,response_message
+            response=make_response(response_message)
+            return response
         elif restaurant==None:
-         response_message={
-            "error":"Restaurant not found"
-        }
-         response=make_response(response_message,404)
-
+            response_message={
+                "error":"Restaurant not found"
+            }
+            response=make_response(response_message,404)
+            
     return response
 
 # @app.route("/DELETE/restaurants/<int:id>")
@@ -119,13 +113,17 @@ def post_restaurant_pizzas():
         restaurant_pizza_dict=new_restaurant_pizza.to_dict()
     
         if restaurant_pizza_dict !=None:
-         response=make_response(restaurant_pizza_dict,201)
+         #pizza_dict=restaurant_pizza_dict.pizza
+         pizza_list=[]
+         pizza_list.append(restaurant_pizza_dict)         
+         
+         response=make_response(pizza_list,201)
          return response
         elif restaurant_pizza_dict==None:
          my_res={
             "errors": ["validation errors"]
         }
-        response=my_res
+         response=my_res
     
         return response
 
