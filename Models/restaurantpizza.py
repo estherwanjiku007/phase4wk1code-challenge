@@ -6,7 +6,7 @@ class RestaurantPizza(db.Model,SerializerMixin):
     __tablename__="restaurantpizzas"
     serialize_rules=("-restaurant.restaurantpizzas","-pizza.restaurantpizzas")
     id=db.Column(db.Integer,primary_key=True)
-    price=db.Column(db.Integer)
+    price=db.Column(db.Integer,db.CheckConstraint("price<=30"))
     pizza_id=db.Column(db.Integer,db.ForeignKey("pizzas.id"))
     restaurant_id=db.Column(db.Integer,db.ForeignKey("restaurants.id"))
     pizza=db.relationship("Pizza",back_populates="restaurantpizzas")
