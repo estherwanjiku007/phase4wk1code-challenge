@@ -13,7 +13,12 @@ migrate = Migrate(app, db)
 
 db.init_app(app)
 @app.route("/restaurants")
-def restaurants():
+def restaurants():    
+    # restaurants=[restaurant.to_dict() for restaurant in Restaurant.query.all()]
+    # my_response= make_response(restaurants,200)     
+        
+    # return  make_response(my_response,200)
+    all_resturants2=[restaurant.to_dict() for restaurant in Restaurant.query.all()]
     all_resturants=[]
     Restaurant.query.all()
     for restaurant in Restaurant.query.all():
@@ -31,23 +36,15 @@ def restaurants():
             "Message":"Restaurant not found"
          }
          response=make_response(restaurant_dict,404)
-         return response
+         return make_response(all_resturants2,200)
 
 @app.route("/restaurants/<int:id>",methods=["GET","DELETE"])
 def restaurants_by_id(id):
     restaurant = Restaurant.query.filter(Restaurant.id==id).first()
-    if request.method=="GET": 
-       
+    if request.method=="GET":        
         if restaurant:             
-            restaurant_dict=restaurant.to_dict()             
-            # restaurant_dict={
-            #    "id":restaurant.id,
-            #    "name":restaurant.name,
-            #    "address":restaurant.address,
-            #    "pizzas":restaurant.restaurantpizzas
-            # }
+            restaurant_dict=restaurant.to_dict()      
             
-            #print(restaurant_dict)           
             response=make_response(restaurant_dict,200)
             return response
         elif  restaurant==None:
@@ -75,40 +72,11 @@ def restaurants_by_id(id):
             
     return response
 
-# @app.route("/DELETE/restaurants/<int:id>")
-# def delete_restaurant(id):
-#     restaurant=restaurants_by_id(id)
-#     if restaurant:
-#         db.session.delete(restaurant)
-#         db.session.commit()
-#         response=make_response(restaurant,200)
-#         return response
-#     else:
-#         response={
-#             "error":"Resaturant not found"
-#         }
-#     return response,response.status_code
 @app.route("/pizzas")
-def get_all_pizzas():       
-       all_pizzas=[]       
-       for pizza in Pizza.query.all(): 
-        if pizza!=None:      
-            pizza_dict={
-                "id":pizza.id,
-                "name":pizza.name,
-                "ingredients":pizza.ingredients
-                
-            }
-            all_pizzas.append(pizza_dict)
-            response=make_response(all_pizzas,200)        
-            return response
-        elif pizza==None:
-            response_dict={
-               "Message":"Pizza not found"
-            }
-            response=make_response(response_dict,404)
-            return response
-           
+def get_all_pizzas():    
+    all_pizzas=[pizzas.to_dict() for pizzas in Pizza.query.all()] 
+    return make_response(all_pizzas,200)  
+    
     
 @app.route("/restaurant_pizza",methods=["POST"])
 def post_restaurant_pizzas():      
